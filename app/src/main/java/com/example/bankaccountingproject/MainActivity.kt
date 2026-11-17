@@ -35,10 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bankaccountingproject.ui.theme.BankAccountingProjectTheme
 import com.example.bankaccountingproject.model.AccountType
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import com.example.bankaccountingproject.ui.theme.CheckingScreen
+import com.example.bankaccountingproject.ui.theme.CreditScreen
+import com.example.bankaccountingproject.ui.theme.DebitScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,80 +61,72 @@ class MainActivity : ComponentActivity() {
 fun Greeting (modifier: Modifier = Modifier) {
 
     var accountType by remember { mutableStateOf<AccountType?>(null) }
-    val selected = accountType
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFFF2F4F8))
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    when (accountType) {
+        AccountType.DEBIT -> DebitScreen(onBack = { accountType = null })
+        AccountType.CREDIT -> CreditScreen(onBack = { accountType = null })
+        AccountType.CHECKING -> CheckingScreen(onBack = { accountType = null })
+        null -> {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(Color(0xFFF2F4F8))
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                // Below is the first welcome text that will be displayed using box.
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(elevation = 12.dp, shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                        .background(
+                            color = Color(0xFF2157BB),
+                            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                        )
+                        .padding(horizontal = 24.dp, vertical = 32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Welcome to your banking system.",
+                        color = Color(0xFFFFFFFF),
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.headlineLarge,
+                    )
+                }
 
-    ) {
+                // Below is the second text that will be displayed using column
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(elevation = 12.dp, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                        .background(Color.White, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "What type of account would you like to create?",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
 
-        //Below is the first welcome text that will be displayed using box.
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 12.dp, shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                .background(
-                    color = Color(0xFF2157BB),
-                    shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                .padding(horizontal = 24.dp, vertical = 32.dp),
-                contentAlignment = Alignment.Center
+                    Spacer(modifier = Modifier.height(60.dp))
 
+                    // Following are three options for account creation.
+                    // Using buttons to make that functionable
+                    AccountButton("Debit Account") { accountType = AccountType.DEBIT }
 
+                    Spacer(modifier = Modifier.height(12.dp))
 
-        ) {
-            Text(
-                text = "Welcome to your banking system.",
-                color = Color(0xFFFFFFFF),
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.headlineLarge,
+                    AccountButton("Credit Account") { accountType = AccountType.CREDIT }
 
-                )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    AccountButton("Checking Account") { accountType = AccountType.CHECKING }
+                }
+            }
         }
-        Spacer(modifier = Modifier.height(24.dp))
-
-        //Below is the second text that will be displayed using column
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(elevation = 12.dp, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
-            .background(Color.White, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-        )
-
-    {
-        Text(
-            text = "What type of account would you like to create?",
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyLarge,
-
-            )
-
-        Spacer(modifier = Modifier.height(60.dp))
-
-        //Following are three options for account creation.
-
-        //Using buttons to make that functionable
-
-        AccountButton("Debit Account") {accountType = AccountType.DEBIT }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        AccountButton("Credit Account") { accountType = AccountType.CREDIT }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        AccountButton("Checking Account") { accountType = AccountType.CHECKING }
-    }
-
-
-
     }
 }
 
@@ -151,7 +142,8 @@ fun AccountButton(text: String, onClick: () -> Unit) {
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF0459A1),
             contentColor = Color.White
-        ),
+        )
+        ,
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 6.dp,
             pressedElevation = 2.dp
