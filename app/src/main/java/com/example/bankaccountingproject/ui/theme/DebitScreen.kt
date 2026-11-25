@@ -1,7 +1,7 @@
 package com.example.bankaccountingproject.ui.theme
 
 
-import android.R
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.*
@@ -26,7 +26,15 @@ fun DebitScreen(onBack: () -> Unit) {
             color = Color.Black,
             modifier = Modifier.padding(bottom = 24.dp),
             fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+
             )
+
+        Text(text = "$10000.00",
+            style = MaterialTheme.typography.headlineLarge,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 24.dp),
+
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
